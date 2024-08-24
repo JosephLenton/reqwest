@@ -572,3 +572,34 @@ async fn highly_concurrent_requests_to_slow_http2_server_with_low_max_concurrent
 
     server.shutdown().await;
 }
+
+#[test]
+fn client_cannot_be_built_with_non_absolute_url() {
+    let result = reqwest::Client::builder().base_url("/users/123").build();
+
+    assert!(result.is_err());
+}
+
+/*
+#[tokio::test]
+async fn todo_() {
+    let _ = env_logger::builder().is_test(true).try_init();
+    let server = server::http(move |_req| async { http::Response::new("Hello".into()) });
+
+    let url = format!(
+        "http://{overridden_domain}:{}/domain_override",
+        server.addr().port()
+    );
+    let client = reqwest::Client::builder()
+        .no_proxy()
+        .resolve(overridden_domain, server.addr())
+        .build()
+        .expect("client builder");
+    let req = client.get(&url);
+    let res = req.send().await.expect("request");
+
+    assert_eq!(res.status(), reqwest::StatusCode::OK);
+    let text = res.text().await.expect("Failed to get text");
+    assert_eq!("Hello", text);
+}
+ */
